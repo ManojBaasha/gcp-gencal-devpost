@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ResponsiveBar } from '@nivo/bar';
 import { 
@@ -8,6 +8,10 @@ import {
   Warning,
   Block
 } from '@mui/icons-material';
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import db from '../firebase-config';
+
+const defaultAvatar = 'https://i.pravatar.cc/150?img=8';
 
 const MemberCard = ({ member }) => (
   <motion.div
@@ -16,7 +20,7 @@ const MemberCard = ({ member }) => (
   >
     <div className="flex items-start space-x-4">
       <img
-        src={member.avatar}
+        src={member.avatar || defaultAvatar}
         alt={member.name}
         className="w-12 h-12 rounded-full"
       />
@@ -72,92 +76,66 @@ const MemberCard = ({ member }) => (
 );
 
 const TeamProgress = () => {
-  // Sample data - replace with real data
-  const teamMembers = [
-    {
-      name: 'Sarah Johnson',
-      role: 'Frontend Developer',
-      avatar: 'https://i.pravatar.cc/150?img=1',
-      progress: 85,
-      performance: 95,
-      completed: 12,
-      inProgress: 3,
-      pending: 4,
-      blocked: 1
-    },
-    {
-      name: 'Michael Chen',
-      role: 'Backend Developer',
-      avatar: 'https://i.pravatar.cc/150?img=2',
-      progress: 92,
-      performance: 90,
-      completed: 15,
-      inProgress: 2,
-      pending: 2,
-      blocked: 0
-    },
-    {
-      name: 'Emily Rodriguez',
-      role: 'UI/UX Designer',
-      avatar: 'https://i.pravatar.cc/150?img=3',
-      progress: 78,
-      performance: 88,
-      completed: 8,
-      inProgress: 4,
-      pending: 3,
-      blocked: 2
-    },
-    {
-      name: 'David Kim',
-      role: 'Full Stack Developer',
-      avatar: 'https://i.pravatar.cc/150?img=4',
-      progress: 95,
-      performance: 92,
-      completed: 18,
-      inProgress: 2,
-      pending: 1,
-      blocked: 0
-    }
-  ];
+  const [teamMembers, setTeamMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [productivityData, setProductivityData] = useState([]);
 
-  const productivityData = [
-    {
-      member: 'Sarah',
-      'Story Points': 34,
-      'Story PointsColor': 'hsl(190, 70%, 50%)',
-      'Bugs Fixed': 12,
-      'Bugs FixedColor': 'hsl(95, 70%, 50%)',
-      'Code Reviews': 8,
-      'Code ReviewsColor': 'hsl(340, 70%, 50%)'
-    },
-    {
-      member: 'Michael',
-      'Story Points': 45,
-      'Story PointsColor': 'hsl(190, 70%, 50%)',
-      'Bugs Fixed': 8,
-      'Bugs FixedColor': 'hsl(95, 70%, 50%)',
-      'Code Reviews': 15,
-      'Code ReviewsColor': 'hsl(340, 70%, 50%)'
-    },
-    {
-      member: 'Emily',
-      'Story Points': 28,
-      'Story PointsColor': 'hsl(190, 70%, 50%)',
-      'Bugs Fixed': 5,
-      'Bugs FixedColor': 'hsl(95, 70%, 50%)',
-      'Code Reviews': 6,
-      'Code ReviewsColor': 'hsl(340, 70%, 50%)'
-    },
-    {
-      member: 'David',
-      'Story Points': 52,
-      'Story PointsColor': 'hsl(190, 70%, 50%)',
-      'Bugs Fixed': 15,
-      'Bugs FixedColor': 'hsl(95, 70%, 50%)',
-      'Code Reviews': 12,
-      'Code ReviewsColor': 'hsl(340, 70%, 50%)'
-    }
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      // Fetch team members
+      const membersSnapshot = await getDocs(collection(db, 'team_members'));
+      const members = membersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      // Fetch tasks by status
+      const statuses = ['completed', 'active', 'pending', 'blocked'];
+      const tasksByStatus = {};
+      for (const status of statuses) {
+        const statusDoc = await getDoc(doc(db, 'tasks', status));
+        tasksByStatus[status] = statusDoc.exists() ? statusDoc.data().items || [] : [];
+      }
+      // Count tasks per member
+      const memberStats = members.map(member => {
+        const name = member.name.split(' ')[0]; // Use first name for matching
+        const completed = tasksByStatus.completed.filter(item => item.includes(name)).length;
+        const inProgress = tasksByStatus.active.filter(item => item.includes(name)).length;
+        const pending = tasksByStatus.pending.filter(item => item.includes(name)).length;
+        const blocked = tasksByStatus.blocked.filter(item => item.includes(name)).length;
+        // Fake progress/performance for now
+        const total = completed + inProgress + pending + blocked;
+        const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
+        const performance = 80 + Math.floor(Math.random() * 20); // Random for demo
+        return {
+          ...member,
+          completed,
+          inProgress,
+          pending,
+          blocked,
+          progress,
+          performance
+        };
+      });
+      setTeamMembers(memberStats);
+      // Productivity data for Nivo
+      setProductivityData(
+        memberStats.map(member => ({
+          member: member.name.split(' ')[0],
+          'Story Points': member.completed * 3 + member.inProgress,
+          'Bugs Fixed': member.completed,
+          'Code Reviews': member.completed + member.inProgress
+        }))
+      );
+      setLoading(false);
+    };
+    fetchData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="p-6 ml-16 flex items-center justify-center h-full">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 ml-16">
@@ -170,7 +148,7 @@ const TeamProgress = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           {teamMembers.map((member) => (
-            <MemberCard key={member.name} member={member} />
+            <MemberCard key={member.id} member={member} />
           ))}
         </div>
 

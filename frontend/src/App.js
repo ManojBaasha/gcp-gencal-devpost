@@ -6,6 +6,7 @@ import Dashboard from './components/Dashboard';
 import Schedule from './components/Schedule';
 import TeamProgress from './components/TeamProgress';
 import About from './components/About';
+import ChatPanel from './components/ChatPanel';
 import './App.css';
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ function App() {
             <Route path="/team" element={<TeamProgress />} />
             <Route path="/about" element={<About />} />
           </Routes>
+          <ChatPanel />
         </div>
       </Router>
     </QueryClientProvider>

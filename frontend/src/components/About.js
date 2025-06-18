@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Timeline from '@mui/lab/Timeline';
 import TimelineItem from '@mui/lab/TimelineItem';
@@ -16,6 +16,16 @@ import {
   BugReport,
   NewReleases
 } from '@mui/icons-material';
+import { doc, getDoc } from 'firebase/firestore';
+import db from '../firebase-config';
+
+const iconMap = {
+  completed: <Flag className="text-green-500" />, // fallback
+  'Project Kickoff': <Flag className="text-green-500" />,
+  'Alpha Release': <Star className="text-green-500" />,
+  'Beta Testing': <Engineering className="text-blue-500" />,
+  'Version 1.0': <NewReleases className="text-gray-500" />
+};
 
 const FeatureCard = ({ icon, title, description }) => (
   <motion.div
@@ -35,59 +45,56 @@ const FeatureCard = ({ icon, title, description }) => (
 );
 
 const About = () => {
+  const [project, setProject] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProject = async () => {
+      setLoading(true);
+      const projectDoc = await getDoc(doc(db, 'project', 'info'));
+      if (projectDoc.exists()) {
+        setProject(projectDoc.data());
+      }
+      setLoading(false);
+    };
+    fetchProject();
+  }, []);
+
+  if (loading || !project) {
+    return (
+      <div className="p-6 ml-16 flex items-center justify-center h-full">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  // Milestones: use timeline string and status from project.status
+  const timeline = project.timeline || '';
+  const status = project.status || {};
+  // For demo, create milestones from timeline and status
   const milestones = [
     {
-      date: 'March 2024',
-      title: 'Project Kickoff',
-      description: 'Initial planning and team formation',
-      status: 'completed',
-      icon: <Flag className="text-green-500" />
-    },
-    {
-      date: 'April 2024',
-      title: 'Alpha Release',
-      description: 'Core features implementation',
-      status: 'completed',
-      icon: <Star className="text-green-500" />
-    },
-    {
-      date: 'May 2024',
-      title: 'Beta Testing',
-      description: 'User feedback and improvements',
+      date: timeline.split('(')[0]?.trim() || '',
+      title: status.sprint ? `Current Sprint: ${status.sprint}` : 'Sprint',
+      description: status.next_milestone || '',
       status: 'in-progress',
       icon: <Engineering className="text-blue-500" />
     },
     {
-      date: 'June 2024',
-      title: 'Version 1.0',
-      description: 'Official release with full feature set',
-      status: 'planned',
-      icon: <NewReleases className="text-gray-500" />
+      date: '',
+      title: 'Blockers',
+      description: status.blockers || '',
+      status: 'blocked',
+      icon: <BugReport className="text-red-500" />
     }
   ];
 
-  const features = [
-    {
-      icon: <Group className="text-blue-500" />,
-      title: 'Team Collaboration',
-      description: 'Real-time collaboration tools for seamless team coordination'
-    },
-    {
-      icon: <TrendingUp className="text-green-500" />,
-      title: 'Progress Tracking',
-      description: 'Comprehensive dashboards for monitoring project progress'
-    },
-    {
-      icon: <CheckCircle className="text-purple-500" />,
-      title: 'Task Management',
-      description: 'Efficient task organization and assignment system'
-    },
-    {
-      icon: <BugReport className="text-red-500" />,
-      title: 'Issue Tracking',
-      description: 'Robust system for tracking and resolving project issues'
-    }
-  ];
+  // Features: use project.goals as features
+  const features = (project.goals || []).map((goal, i) => ({
+    icon: <CheckCircle className="text-purple-500" />,
+    title: `Goal ${i + 1}`,
+    description: goal
+  }));
 
   return (
     <div className="p-6 ml-16">
@@ -97,13 +104,8 @@ const About = () => {
         transition={{ duration: 0.5 }}
       >
         <div className="mb-12">
-          <h1 className="text-3xl font-bold text-gray-800 mb-4">About the Project</h1>
-          <p className="text-gray-600 max-w-3xl">
-            Our PM automation platform streamlines project management workflows, 
-            enabling teams to focus on what matters most - delivering exceptional results. 
-            With integrated AI assistance and real-time collaboration features, 
-            we're revolutionizing how teams work together.
-          </p>
+          <h1 className="text-3xl font-bold text-gray-800 mb-4">{project.name || 'About the Project'}</h1>
+          <p className="text-gray-600 max-w-3xl">{project.summary}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
@@ -132,6 +134,7 @@ const About = () => {
                     sx={{
                       bgcolor: milestone.status === 'completed' ? '#22c55e' :
                              milestone.status === 'in-progress' ? '#3b82f6' :
+                             milestone.status === 'blocked' ? '#ef4444' :
                              '#d1d5db'
                     }}
                   >

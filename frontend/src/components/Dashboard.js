@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ResponsiveLine } from '@nivo/line';
 import { ResponsivePie } from '@nivo/pie';
@@ -8,6 +8,8 @@ import {
   CheckCircle, 
   Schedule 
 } from '@mui/icons-material';
+import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
+import db from '../firebase-config';
 
 const MetricCard = ({ icon, title, value, trend }) => (
   <motion.div
@@ -21,34 +23,76 @@ const MetricCard = ({ icon, title, value, trend }) => (
       <div>
         <h3 className="text-lg font-semibold text-gray-700">{title}</h3>
         <p className="text-2xl font-bold">{value}</p>
-        <p className={`text-sm ${trend >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-          {trend >= 0 ? '↑' : '↓'} {Math.abs(trend)}% from last week
-        </p>
+        {trend !== undefined && (
+          <p className={`text-sm ${trend >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+            {trend >= 0 ? '↑' : '↓'} {Math.abs(trend)}% from last week
+          </p>
+        )}
       </div>
     </div>
   </motion.div>
 );
 
 const Dashboard = () => {
-  // Sample data - replace with real data
-  const sprintProgress = [
+  const [projectInfo, setProjectInfo] = useState(null);
+  const [tasks, setTasks] = useState({ completed: [], active: [], pending: [], blocked: [] });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      // Fetch project info
+      const projectDoc = await getDoc(doc(db, 'project', 'info'));
+      let project = null;
+      if (projectDoc.exists()) {
+        project = projectDoc.data();
+      }
+      // Fetch tasks by status
+      const statuses = ['completed', 'active', 'pending', 'blocked'];
+      const tasksData = {};
+      for (const status of statuses) {
+        const statusDoc = await getDoc(doc(db, 'tasks', status));
+        tasksData[status] = statusDoc.exists() ? statusDoc.data().items || [] : [];
+      }
+      setProjectInfo(project);
+      setTasks(tasksData);
+      setLoading(false);
+    };
+    fetchData();
+  }, []);
+
+  // Metrics
+  const totalTasks = tasks.completed.length + tasks.active.length + tasks.pending.length + tasks.blocked.length;
+  const completedTasks = tasks.completed.length;
+  const openIssues = tasks.blocked.length;
+  const sprintProgress = projectInfo && projectInfo.status && projectInfo.status.progress_percent ? projectInfo.status.progress_percent : 0;
+
+  // Nivo chart data
+  const sprintProgressData = [
     {
-      id: "tasks",
+      id: 'tasks',
       data: [
-        { x: "Week 1", y: 12 },
-        { x: "Week 2", y: 25 },
-        { x: "Week 3", y: 38 },
-        { x: "Week 4", y: 45 }
+        { x: 'Week 1', y: 0 },
+        { x: 'Week 2', y: projectInfo?.status?.progress_percent || 0 },
+        { x: 'Week 3', y: Math.min(100, (projectInfo?.status?.progress_percent || 0) + 20) },
+        { x: 'Week 4', y: 100 }
       ]
     }
   ];
-
   const taskDistribution = [
-    { id: 'Completed', value: 45, color: 'hsl(152, 70%, 50%)' },
-    { id: 'In Progress', value: 30, color: 'hsl(241, 70%, 50%)' },
-    { id: 'Blocked', value: 15, color: 'hsl(0, 70%, 50%)' },
-    { id: 'To Do', value: 10, color: 'hsl(206, 70%, 50%)' }
+    { id: 'Completed', value: completedTasks, color: 'hsl(152, 70%, 50%)' },
+    { id: 'Active', value: tasks.active.length, color: 'hsl(241, 70%, 50%)' },
+    { id: 'Blocked', value: openIssues, color: 'hsl(0, 70%, 50%)' },
+    { id: 'Pending', value: tasks.pending.length, color: 'hsl(206, 70%, 50%)' }
   ];
+
+  if (loading || !projectInfo) {
+    return (
+      <div className="p-6 ml-16 flex items-center justify-center h-full">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 ml-16">
@@ -57,32 +101,29 @@ const Dashboard = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">Project Overview</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-2">{projectInfo.name || 'Project Overview'}</h1>
+        <p className="text-gray-600 mb-8 max-w-2xl">{projectInfo.summary}</p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <MetricCard
             icon={<Assignment className="text-blue-500" />}
             title="Total Tasks"
-            value="156"
-            trend={12}
+            value={totalTasks}
           />
           <MetricCard
             icon={<CheckCircle className="text-green-500" />}
             title="Completed"
-            value="89"
-            trend={8}
+            value={completedTasks}
           />
           <MetricCard
             icon={<BugReport className="text-red-500" />}
-            title="Open Issues"
-            value="23"
-            trend={-5}
+            title="Blocked"
+            value={openIssues}
           />
           <MetricCard
             icon={<Schedule className="text-purple-500" />}
             title="Sprint Progress"
-            value="67%"
-            trend={15}
+            value={`${sprintProgress}%`}
           />
         </div>
 
@@ -96,7 +137,7 @@ const Dashboard = () => {
             <h2 className="text-xl font-semibold mb-4">Sprint Progress</h2>
             <div className="h-80">
               <ResponsiveLine
-                data={sprintProgress}
+                data={sprintProgressData}
                 margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
                 xScale={{ type: 'point' }}
                 yScale={{ type: 'linear', min: 0, max: 'auto' }}
