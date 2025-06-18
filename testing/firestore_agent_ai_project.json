@@ -1,0 +1,309 @@
+{
+  "team_members": {
+    "ava_chen": {
+      "name": "Ava Chen",
+      "role": "UI/UX Developer",
+      "personality": "Detail-oriented, empathetic, loves Figma",
+      "meeting_preference": "Late mornings (10-12)",
+      "notes": "Enjoys user testing"
+    },
+    "leo_martinez": {
+      "name": "Leo Martinez",
+      "role": "Frontend Developer",
+      "personality": "Fast-paced, extroverted, React/Tailwind fan",
+      "meeting_preference": "Best before lunch (9-11)",
+      "notes": "Coordinates with backend often"
+    },
+    "priya_singh": {
+      "name": "Priya Singh",
+      "role": "Backend Developer",
+      "personality": "Analytical, quiet, Python & APIs expert",
+      "meeting_preference": "Afternoons only (1-4 PM)",
+      "notes": "Prefers async updates"
+    },
+    "amir_nasser": {
+      "name": "Amir Nasser",
+      "role": "Backend Developer",
+      "personality": "Curious, methodical, works on infra",
+      "meeting_preference": "Flexible, but avoids Fridays",
+      "notes": "Likes early standups"
+    },
+    "daria_volkov": {
+      "name": "Daria Volkov",
+      "role": "UI/UX Designer",
+      "personality": "Creative, assertive, works with animations",
+      "meeting_preference": "Best 11\u20132 PM, avoids mornings",
+      "notes": "Needs approval checkpoints"
+    },
+    "jake_oconnor": {
+      "name": "Jake O\u2019Connor",
+      "role": "Animator",
+      "personality": "Chill, visual storyteller, uses Spine",
+      "meeting_preference": "Any time, loves quick syncs",
+      "notes": "Works best when left alone"
+    },
+    "naomi_tanaka": {
+      "name": "Naomi Tanaka",
+      "role": "PM (Cross-team)",
+      "personality": "Organized, assertive, calm under pressure",
+      "meeting_preference": "Always available 9\u20135",
+      "notes": "Coordinates all teams"
+    },
+    "malik_johnson": {
+      "name": "Malik Johnson",
+      "role": "Stakeholder",
+      "personality": "Results-driven, direct, busy exec",
+      "meeting_preference": "Only Wed/Fri 10\u201311 AM",
+      "notes": "Needs concise updates"
+    }
+  },
+  "project_info": {
+    "name": "AgentCore Integration",
+    "summary": "Integrating Agentic AI to our gaming platform to enable adaptive, intelligent NPCs.",
+    "goals": [
+      "Implement Agentic AI SDK into Unity",
+      "Design adaptive UI/UX",
+      "Add animation logic to NPC models",
+      "Build backend systems for NPC memory and profiling"
+    ],
+    "timeline": "4-week sprint (Sprint 1 of 3)",
+    "status": {
+      "sprint": "Week 2",
+      "progress_percent": 45,
+      "blockers": "Backend integration with legacy systems",
+      "next_milestone": "Agent Behavior Demo on Friday"
+    }
+  },
+"tasks": {
+  "completed": [
+    "UI Wireframes (Ava)",
+    "Main Menu Redesign (Leo)",
+    "NPC Idle Animations (Jake)",
+    "Dialogue memory API (Priya)"
+  ],
+  "active": [
+    "Frontend AI UI Hooks (Leo)",
+    "Game Behavior Script Integration (Amir)",
+    "Animation-to-AI trigger sync (Daria)",
+    "AI Onboarding Flow Design (Ava)",
+    "Tooltip Behavior Testing (Ava)",
+    "Responsive Layout Bug Fixes (Ava)",
+    "Sync UX Feedback with Figma Components (Ava)",
+    "Review adaptive layouts for NPC interactions (Ava)",
+    "In-game Dialogue UI Integration (Leo)",
+    "NPC Emotion Meter Visuals (Leo)",
+    "Tailwind Component Refactor (Leo)",
+    "Review Frontend–Backend data handling with Priya (Leo)",
+    "Secure Save-State APIs (Priya)",
+    "Dialogue Recall Accuracy Logs (Priya)",
+    "Async Event Handler for NPC triggers (Priya)",
+    "Event Listener Infrastructure (Amir)",
+    "Cloud Function Scaling Benchmarks (Amir)",
+    "Patch Legacy Auth Layer (Amir)",
+    "Player Profiling Metadata Fix (Amir)",
+    "NPC Mood Board & Expression States (Daria)",
+    "Finalize Animation Feedback System (Daria)",
+    "Figma-to-Spine Asset Approval (Daria)",
+    "UI Animation Behavior Guide (Daria)",
+    "NPC Combat Animation Cycle (Jake)",
+    "Sync Animation Events with Voiceover Triggers (Jake)",
+    "Spine Export Cleanup (Jake)",
+    "Background Scene Loops (Jake)",
+    "Preview Cutscene Motion Flow (Jake)",
+    "Coordinate Agent Behavior Demo Logistics (Naomi)",
+    "Update Sprint Dashboard (Naomi)",
+    "Review Active Blockers with Engineering (Naomi)",
+    "Draft Post-Milestone Review Agenda (Naomi)",
+    "Document Cross-functional Alignment Plan (Naomi)"
+  ],
+  "pending": [
+    "User Testing (Ava)",
+    "Memory Sync Optimization (Priya)",
+    "Backend-to-Frontend data sync (Leo + Priya)",
+    "NPC UI Mood Mapping Final Review (Daria)",
+    "In-game Tutorial Overlay (Leo)",
+    "Dialogue Testing with Variable NPCs (Jake + Priya)",
+    "Adaptive Input UX (Ava + Daria)",
+    "Combat Scenario Logging (Amir)"
+  ],
+  "blocked": [
+    "Real-time player profiling system (Amir)",
+    "Mid-sprint review meeting (Waiting on Malik's input)",
+    "Legacy API Mapping (Priya)",
+    "UI QA for profiling features (Ava + Leo)"
+  ]
+},
+  "calendar": {
+    "naomi_tanaka": [
+      {
+        "day": "Mon",
+        "time": "10 AM",
+        "event": "Daily Standup"
+      },
+      {
+        "day": "Tue",
+        "time": "2 PM",
+        "event": "Sprint Check-in"
+      },
+      {
+        "day": "Wed",
+        "time": "10 AM",
+        "event": "Stakeholder Sync"
+      },
+      {
+        "day": "Thu",
+        "time": "3 PM",
+        "event": "Product Review"
+      },
+      {
+        "day": "Fri",
+        "time": "9 AM",
+        "event": "AgentCore Demo Prep"
+      }
+    ],
+    "malik_johnson": [
+      {
+        "day": "Wed",
+        "time": "10 AM",
+        "event": "Stakeholder Sync"
+      },
+      {
+        "day": "Fri",
+        "time": "10 AM",
+        "event": "Review Build + Feedback"
+      }
+    ],
+    "ava_chen": [
+      {
+        "day": "Mon",
+        "time": "10 AM",
+        "event": "Daily Standup"
+      },
+      {
+        "day": "Wed",
+        "time": "11 AM",
+        "event": "UX Design Review"
+      },
+      {
+        "day": "Thu",
+        "time": "1 PM",
+        "event": "Figma Feedback Loop"
+      },
+      {
+        "day": "Fri",
+        "time": "11 AM",
+        "event": "Sprint Retrospective"
+      }
+    ],
+    "leo_martinez": [
+      {
+        "day": "Mon",
+        "time": "10 AM",
+        "event": "Daily Standup"
+      },
+      {
+        "day": "Tue",
+        "time": "11 AM",
+        "event": "UI-Hook Integration Review"
+      },
+      {
+        "day": "Wed",
+        "time": "9 AM",
+        "event": "Design Handoff"
+      },
+      {
+        "day": "Thu",
+        "time": "3 PM",
+        "event": "Product Review"
+      }
+    ],
+    "priya_singh": [
+      {
+        "day": "Mon",
+        "time": "10 AM",
+        "event": "Daily Standup"
+      },
+      {
+        "day": "Tue",
+        "time": "1 PM",
+        "event": "Backend API Sync"
+      },
+      {
+        "day": "Wed",
+        "time": "3 PM",
+        "event": "Debugging Session"
+      },
+      {
+        "day": "Fri",
+        "time": "2 PM",
+        "event": "Infra Blocker Deep Dive"
+      }
+    ],
+    "amir_nasser": [
+      {
+        "day": "Mon",
+        "time": "10 AM",
+        "event": "Daily Standup"
+      },
+      {
+        "day": "Wed",
+        "time": "1 PM",
+        "event": "Infra Fix Pair Programming"
+      },
+      {
+        "day": "Thu",
+        "time": "9 AM",
+        "event": "AI Behavior Infra Review"
+      },
+      {
+        "day": "Fri",
+        "time": "2 PM",
+        "event": "Legacy System Debug"
+      }
+    ],
+    "daria_volkov": [
+      {
+        "day": "Mon",
+        "time": "10 AM",
+        "event": "Daily Standup"
+      },
+      {
+        "day": "Tue",
+        "time": "11 AM",
+        "event": "Animation Review Sync"
+      },
+      {
+        "day": "Wed",
+        "time": "12 PM",
+        "event": "Design QA w/ Leo"
+      },
+      {
+        "day": "Fri",
+        "time": "3 PM",
+        "event": "Creative Showcase"
+      }
+    ],
+    "jake_oconnor": [
+      {
+        "day": "Mon",
+        "time": "10 AM",
+        "event": "Daily Standup"
+      },
+      {
+        "day": "Tue",
+        "time": "2 PM",
+        "event": "Animation Behavior Sync"
+      },
+      {
+        "day": "Thu",
+        "time": "2 PM",
+        "event": "Spine Animation Import Review"
+      },
+      {
+        "day": "Fri",
+        "time": "1 PM",
+        "event": "Animation + AI Joint Demo"
+      }
+    ]
+  }
+}
