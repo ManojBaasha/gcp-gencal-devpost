@@ -2,7 +2,7 @@ from shared.firestore import get_team_members, add_team_member, delete_team_memb
 from shared.firestore import get_tasks, add_task, delete_task, get_calendar_events, add_calendar_event, delete_calendar_event, delete_all_data
 from shared.firestore import get_team_member, get_project, get_task, get_calendar_event
 
-from pydantic import ValidationError
+from pydantic import ValidationError # type: ignore
 from shared.schema import (
     TeamMember, ProjectInfo, Tasks, CalendarEvent,
     ProjectInfo as ProjectInfoSchema,

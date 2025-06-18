@@ -1,4 +1,4 @@
-from google.adk.agents import LlmAgent
+from google.adk.agents import LlmAgent # type: ignore
 from platform_interaction.agent import root_agent as platform_agent
 
 root_agent = LlmAgent(

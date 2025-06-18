@@ -1,6 +1,6 @@
 import json
-import firebase_admin
-from firebase_admin import credentials, firestore
+import firebase_admin # type: ignore
+from firebase_admin import credentials, firestore # type: ignore
 
 # Path to your service account key file
 SERVICE_ACCOUNT_PATH = "./product-manager-devpost-firebase-adminsdk-fbsvc-6b860d1bfc.json"
