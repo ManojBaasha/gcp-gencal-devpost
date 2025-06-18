@@ -1,0 +1,23 @@
+day,event_name,start_time,end_time,duration_minutes,description
+Sunday,Gym Workout,17:00,18:30,90,Ideation for new features
+Sunday,Team Meeting,18:30,20:00,90,Cardio day
+Monday,Grocery Shopping,16:15,17:00,45,Catch up with Sarah
+Monday,Lunch Break,16:30,17:15,45,Quick lunch
+Monday,Coding Sprint,08:15,08:45,30,Ideation for new features
+Tuesday,Grocery Shopping,11:00,12:00,60,Quick lunch
+Tuesday,Study Session,13:00,13:45,45,Cardio day
+Tuesday,Study Session,08:30,09:15,45,Bring notebook
+Tuesday,Lunch Break,18:30,19:30,60,Discuss timeline
+Wednesday,Evening Walk,10:30,11:15,45,Catch up with Sarah
+Wednesday,Doctor Appointment,09:45,10:45,60,Ideation for new features
+Wednesday,Team Meeting,11:00,11:45,45,Backend implementation
+Thursday,Grocery Shopping,17:15,18:15,60,Bring notebook
+Thursday,Evening Walk,11:30,13:00,90,Quick lunch
+Thursday,Coffee with Sarah,18:45,19:15,30,Don’t forget reports
+Friday,Team Meeting,10:15,11:00,45,Quick lunch
+Friday,Study Session,16:15,17:15,60,Don’t forget reports
+Friday,Gym Workout,18:45,19:15,30,Don’t forget reports
+Friday,Project Brainstorm,18:00,18:45,45,Buy veggies and fruits
+Saturday,Study Session,13:00,13:30,30,Catch up with Sarah
+Saturday,Doctor Appointment,16:30,18:00,90,Backend implementation
+Saturday,Lunch Break,17:00,18:30,90,Walk around the block
