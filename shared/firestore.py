@@ -1,6 +1,8 @@
-import firebase_admin
-from firebase_admin import credentials
-from firebase_admin import firestore
+# shared/firestore.py
+
+import firebase_admin # type: ignore
+from firebase_admin import credentials # type: ignore
+from firebase_admin import firestore # type: ignore
 
 # Path to your service account key file
 SERVICE_ACCOUNT_PATH = "./shared/product-manager-devpost-firebase-adminsdk-fbsvc-6b860d1bfc.json"
@@ -27,18 +29,18 @@ def delete_team_member(member_id: str):
     
 def get_project_info():
     """Fetch project information."""
-    project_ref = db.collection('project_info').document('info')
-    return project_ref.get().to_dict() if project_ref.get().exists else None
+    project_ref = db.collection('project').document('info')
+    doc = project_ref.get()
+    return doc.to_dict() if doc.exists else None
 
 def add_project_info(project_data: dict):
-    """Add or update project information."""
-    project_ref = db.collection('project_info').document('info')
+    project_ref = db.collection('project').document('info')
     project_ref.set(project_data)
-    
+
 def delete_project_info():
-    """Delete project information."""
-    project_ref = db.collection('project_info').document('info')
+    project_ref = db.collection('project').document('info')
     project_ref.delete()
+
     
 def get_tasks():
     """Fetch all task categories from their separate documents."""

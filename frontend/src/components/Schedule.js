@@ -18,10 +18,10 @@ import db from '../firebase-config.js';
 const normalizeTime = (t) => {
   if (!t) return '';
   return t
-    .replace(/^0/, '') // Remove leading zero
-    .replace(':00', '') // Remove :00
-    .replace(/\s+/, '') // Remove spaces
-    .replace('.', '') // Remove periods if any
+    .replace(/^0/, '') 
+    .replace(':00', '') 
+    .replace(/\s+/, '') 
+    .replace('.', '') 
     .toLowerCase();
 };
 

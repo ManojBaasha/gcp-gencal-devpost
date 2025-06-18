@@ -57,8 +57,9 @@
       "notes": "Needs concise updates"
     }
   },
-  "project_info": {
-    "name": "AgentCore Integration",
+  "project": {
+    "info": {
+       "name": "AgentCore Integration",
     "summary": "Integrating Agentic AI to our gaming platform to enable adaptive, intelligent NPCs.",
     "goals": [
       "Implement Agentic AI SDK into Unity",
@@ -72,6 +73,7 @@
       "progress_percent": 45,
       "blockers": "Backend integration with legacy systems",
       "next_milestone": "Agent Behavior Demo on Friday"
+    }
     }
   },
 "tasks": {

@@ -1,17 +1,17 @@
 import json
-import firebase_admin # type: ignore
-from firebase_admin import credentials, firestore # type: ignore
+import firebase_admin  # type: ignore
+from firebase_admin import credentials, firestore  # type: ignore
 
-# Path to your service account key file
+# Paths
 SERVICE_ACCOUNT_PATH = "./product-manager-devpost-firebase-adminsdk-fbsvc-6b860d1bfc.json"
 JSON_DATA_PATH = "./firestore_agent_ai_project.json"
 
-# Initialize Firestore DB
+# Initialize Firestore
 cred = credentials.Certificate(SERVICE_ACCOUNT_PATH)
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
-# === HELPER FUNCTION TO DELETE COLLECTIONS ===
+# === HELPER: Delete Collection ===
 def delete_collection(coll_ref):
     docs = coll_ref.stream()
     for doc in docs:
@@ -23,31 +23,34 @@ delete_collection(db.collection("team_members"))
 delete_collection(db.collection("tasks"))
 delete_collection(db.collection("calendar"))
 
-# Delete single document
-project_info_ref = db.collection("project").document("info")
-if project_info_ref.get().exists:
+project_ref = db.collection("project").document("info")
+if project_ref.get().exists:
     print("Deleting project/info")
-    project_info_ref.delete()
+    project_ref.delete()
 
 # === LOAD JSON DATA ===
 with open(JSON_DATA_PATH, "r") as f:
     data = json.load(f)
 
-# === RE-ADD DATA ===
+# === ADD DATA BACK ===
 
-# Add team members
+# Team Members
 for uid, member in data["team_members"].items():
     db.collection("team_members").document(uid).set(member)
 
-# Add project info
-db.collection("project").document("info").set(data["project_info"])
+# Project Info
+if "project" in data and "info" in data["project"]:
+   db.collection("project").document("info").set(data["project"]["info"])
+else:
+    print("⚠️ Project info missing in JSON")
 
-# Add tasks
-for status, items in data["tasks"].items():
-    db.collection("tasks").document(status).set({"items": items})
+# Tasks
+for status, tasks in data["tasks"].items():
+    db.collection("tasks").document(status).set({"items": tasks})
 
-# Add calendar events
-for user_id, events in data["calendar"].items():
-    db.collection("calendar").document(user_id).set({"events": events})
+# Calendar
+for member_id, events in data["calendar"].items():
+    # Save events as a list under "events" key
+    db.collection("calendar").document(member_id).set({"events": events})
 
-print("Firestore reset and repopulated successfully.")
+print("✅ Firestore reset and repopulated successfully.")
