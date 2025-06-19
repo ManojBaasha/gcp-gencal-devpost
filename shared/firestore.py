@@ -4,8 +4,11 @@ import firebase_admin # type: ignore
 from firebase_admin import credentials # type: ignore
 from firebase_admin import firestore # type: ignore
 
+from dotenv import load_dotenv
+load_dotenv()
+
 # Path to your service account key file
-SERVICE_ACCOUNT_PATH = "./shared/product-manager-devpost-firebase-adminsdk-fbsvc-6b860d1bfc.json"
+SERVICE_ACCOUNT_PATH = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
 
 # Initialize Firestore DB
 cred = credentials.Certificate(SERVICE_ACCOUNT_PATH)

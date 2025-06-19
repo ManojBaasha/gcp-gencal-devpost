@@ -9,12 +9,14 @@ from google.adk.sessions import InMemorySessionService
 from google.genai import types
 import traceback
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 
-os.environ["GOOGLE_CLOUD_PROJECT"] = "gcp-gencal-devpost"
-os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
-os.environ["USE_VERTEX_AI"] = "true"
-os.environ["GOOGLE_API_KEY"] = "AIzaSyCm0oKlz3lgrvTQzS1pi9vqXbuPuZAIhU0"
+os.environ["GOOGLE_CLOUD_PROJECT"] = os.getenv("GOOGLE_CLOUD_PROJECT")
+os.environ["GOOGLE_CLOUD_LOCATION"] = os.getenv("GOOGLE_CLOUD_LOCATION")
+os.environ["USE_VERTEX_AI"] = os.getenv("USE_VERTEX_AI")
+os.environ["GOOGLE_API_KEY"] = os.getenv("GOOGLE_API_KEY")
 
 
 app = FastAPI(
