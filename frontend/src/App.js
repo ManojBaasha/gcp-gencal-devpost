@@ -17,13 +17,17 @@ function App() {
       <Router>
         <div className="flex min-h-screen bg-gray-50">
           <Sidebar />
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/schedule" element={<Schedule />} />
-            <Route path="/team" element={<TeamProgress />} />
-            <Route path="/about" element={<About />} />
-          </Routes>
-          <ChatPanel />
+          <div className="ml-16 flex-1 flex">
+            <div className="flex-1">
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/schedule" element={<Schedule />} />
+                <Route path="/team" element={<TeamProgress />} />
+                <Route path="/about" element={<About />} />
+              </Routes>
+            </div>
+            <ChatPanel />
+          </div>
         </div>
       </Router>
     </QueryClientProvider>

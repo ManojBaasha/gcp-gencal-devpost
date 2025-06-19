@@ -34,14 +34,38 @@ const Message = ({ message, onDelete }) => (
   </motion.div>
 );
 
+async function callOrchestrator(message) {
+    try {
+        const response = await fetch('https://5f45-2601-204-f182-9120-560-a547-aef7-3bfc.ngrok-free.app/orchestrate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ message: message, context: {} }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Orchestrator response:", data.responses);
+        return data.responses;
+    } catch (error) {
+        console.error("Failed to call orchestrator:", error);
+        return null;
+    }
+}
+
 const ChatPanel = () => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [isMinimized, setIsMinimized] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (input.trim()) {
       const newMessage = {
         id: Date.now(),
@@ -49,20 +73,27 @@ const ChatPanel = () => {
         sender: 'user',
         timestamp: new Date()
       };
-      
       setMessages(prev => [...prev, newMessage]);
       setInput('');
-
-      // Simulate AI response
-      setTimeout(() => {
+      setLoading(true);
+      try {
+        const botText = await callOrchestrator(newMessage.text);
         const aiResponse = {
           id: Date.now() + 1,
-          text: "I'm here to help automate your PM tasks! Let me know what you need assistance with.",
+          text: botText || 'Sorry, I could not get a response.',
           sender: 'bot',
           timestamp: new Date()
         };
         setMessages(prev => [...prev, aiResponse]);
-      }, 1000);
+      } catch (err) {
+        setMessages(prev => [...prev, {
+          id: Date.now() + 2,
+          text: 'Error: Could not reach the assistant API.',
+          sender: 'bot',
+          timestamp: new Date()
+        }]);
+      }
+      setLoading(false);
     }
   };
 
@@ -83,111 +114,98 @@ const ChatPanel = () => {
   };
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ x: '100%' }}
-        animate={{ 
-          x: isExpanded ? 0 : '85%',
-          height: isMinimized ? '48px' : '100vh'
-        }}
-        transition={{ type: 'spring', damping: 20 }}
-        className="fixed right-0 top-0 w-80 bg-white shadow-xl z-50 flex flex-col"
-      >
-        {/* Header */}
-        <div className="flex justify-between items-center p-3 border-b bg-gray-50">
-          <div className="flex items-center">
-            <ChatBubble className="text-blue-500 mr-2" />
-            <h2 className="text-lg font-semibold">AI Assistant</h2>
-          </div>
-          <div className="flex items-center space-x-1">
+    <div className="w-80 bg-white shadow-lg border-l flex flex-col h-screen">
+      {/* Header */}
+      <div className="flex justify-between items-center p-3 border-b bg-gray-50">
+        <div className="flex items-center">
+          <ChatBubble className="text-blue-500 mr-2" />
+          <h2 className="text-lg font-semibold">AI Assistant</h2>
+        </div>
+        <div className="flex items-center space-x-1">
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+            className="p-1 hover:bg-gray-200 rounded-full"
+          >
+            <Settings fontSize="small" />
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setIsMinimized(!isMinimized)}
+            className="p-1 hover:bg-gray-200 rounded-full"
+          >
+            {isMinimized ? <ExpandLess fontSize="small" /> : <ExpandMore fontSize="small" />}
+          </motion.button>
+        </div>
+      </div>
+
+      {/* Settings Dropdown */}
+      <AnimatePresence>
+        {isSettingsOpen && !isMinimized && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="border-b"
+          >
+            <div className="p-4 bg-gray-50">
+              <button
+                onClick={handleClearChat}
+                className="flex items-center space-x-2 text-red-500 hover:text-red-600"
+              >
+                <Delete fontSize="small" />
+                <span>Clear Chat History</span>
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Messages */}
+      {!isMinimized && (
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {messages.map((msg) => (
+            <Message 
+              key={msg.id} 
+              message={msg} 
+              onDelete={handleDeleteMessage}
+            />
+          ))}
+          {loading && (
+            <div className="text-xs text-gray-400 italic">AI Assistant is typing...</div>
+          )}
+        </div>
+      )}
+
+      {/* Input Area */}
+      {!isMinimized && (
+        <div className="p-4 border-t">
+          <div className="flex space-x-2">
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder="Type your message..."
+              className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
+              rows={1}
+              style={{ minHeight: '40px', maxHeight: '120px' }}
+              disabled={loading}
+            />
             <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => setIsSettingsOpen(!isSettingsOpen)}
-              className="p-1 hover:bg-gray-200 rounded-full"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleSend}
+              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center"
+              disabled={loading}
             >
-              <Settings fontSize="small" />
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => setIsMinimized(!isMinimized)}
-              className="p-1 hover:bg-gray-200 rounded-full"
-            >
-              {isMinimized ? <ExpandLess fontSize="small" /> : <ExpandMore fontSize="small" />}
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => setIsExpanded(!isExpanded)}
-              className="p-1 hover:bg-gray-200 rounded-full"
-            >
-              <Close fontSize="small" />
+              <Send />
             </motion.button>
           </div>
         </div>
-
-        {/* Settings Dropdown */}
-        <AnimatePresence>
-          {isSettingsOpen && !isMinimized && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="border-b"
-            >
-              <div className="p-4 bg-gray-50">
-                <button
-                  onClick={handleClearChat}
-                  className="flex items-center space-x-2 text-red-500 hover:text-red-600"
-                >
-                  <Delete fontSize="small" />
-                  <span>Clear Chat History</span>
-                </button>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Messages */}
-        {!isMinimized && (
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
-            {messages.map((msg) => (
-              <Message 
-                key={msg.id} 
-                message={msg} 
-                onDelete={handleDeleteMessage}
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Input Area */}
-        {!isMinimized && (
-          <div className="p-4 border-t">
-            <div className="flex space-x-2">
-              <textarea
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyPress={handleKeyPress}
-                placeholder="Type your message..."
-                className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                rows={1}
-                style={{ minHeight: '40px', maxHeight: '120px' }}
-              />
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleSend}
-                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 flex items-center"
-              >
-                <Send />
-              </motion.button>
-            </div>
-          </div>
-        )}
-      </motion.div>
-    </AnimatePresence>
+      )}
+    </div>
   );
 };
 
