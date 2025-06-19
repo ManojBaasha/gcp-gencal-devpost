@@ -1,0 +1,47 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual environment
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment variable files
+.env
+**/.env
+
+# Firebase/Google service account keys (never commit these!)
+*.json
+!src/**/*.json  # (if you have non-secret json in src, adjust as needed)
+shared/product-manager-devpost-firebase-adminsdk-*.json
+testing/product-manager-devpost-firebase-adminsdk-*.json
+
+# Log files
+*.log
+
+# SQLite and other database files
+*.sqlite3
+*.db
+
+# Egg info
+*.egg-info/
+dist/
+build/
+
+# Node modules (if any JS/TS code)
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# VSCode settings
+.vscode/
