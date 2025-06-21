@@ -36,7 +36,7 @@ const Message = ({ message, onDelete }) => (
 
 async function callOrchestrator(message) {
     try {
-        const response = await fetch('https://5f45-2601-204-f182-9120-560-a547-aef7-3bfc.ngrok-free.app/orchestrate', {
+        const response = await fetch('https://gcp-gencal-devpost.onrender.com/orchestrate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
