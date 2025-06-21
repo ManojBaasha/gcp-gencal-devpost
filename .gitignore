@@ -20,6 +20,7 @@ venv.bak/
 !src/**/*.json  # (if you have non-secret json in src, adjust as needed)
 shared/product-manager-devpost-firebase-adminsdk-*.json
 testing/product-manager-devpost-firebase-adminsdk-*.json
+product-manager-devpost-firebase-adminsdk-*.json
 
 # Log files
 *.log

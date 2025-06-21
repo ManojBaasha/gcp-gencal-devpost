@@ -3,6 +3,7 @@
 import firebase_admin # type: ignore
 from firebase_admin import credentials # type: ignore
 from firebase_admin import firestore # type: ignore
+import os
 
 from dotenv import load_dotenv
 load_dotenv()
