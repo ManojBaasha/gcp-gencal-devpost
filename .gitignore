@@ -16,11 +16,8 @@ venv.bak/
 **/.env
 
 # Firebase/Google service account keys (never commit these!)
-*.json
-!src/**/*.json  # (if you have non-secret json in src, adjust as needed)
-shared/product-manager-devpost-firebase-adminsdk-*.json
-testing/product-manager-devpost-firebase-adminsdk-*.json
 product-manager-devpost-firebase-adminsdk-*.json
+**/product-manager-devpost-firebase-adminsdk-*.json
 
 # Log files
 *.log
