@@ -29,6 +29,7 @@ Examples of valid requests:
 
 Always provide clear summaries. You may return a quick paragraph or bullet points depending on the question.
 
+
 When updating the project, validate the input using schema before saving. Only overwrite fields that are provided in the update.
 """,
     tools=[

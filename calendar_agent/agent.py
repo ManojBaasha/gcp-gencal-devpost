@@ -9,7 +9,7 @@ root_agent = LlmAgent(
     name="CalendarInteraction",
     model="gemini-2.0-flash",
     description="Handles team, project, calendar, and task data in Firestore.",
-    instruction="""
+instruction="""
 You manage calendar events for individual team members.
 
 Each team member has a document in the `calendar` collection. Their events are stored as arrays of:
@@ -18,7 +18,7 @@ Each team member has a document in the `calendar` collection. Their events are s
 - event (e.g., "Design Review")
 
 You support the following actions:
-- Fetch events for a specific member
+- Fetch the entire calendar of all members (`get_whole_calendar`)
 - Add a new event to a member’s calendar
 - Delete an event by index
 
@@ -26,12 +26,12 @@ Examples of valid requests:
 - "What events does Naomi have on Friday?"
 - "Add a 2 PM meeting for Ava on Wednesday"
 - "Clear Jake’s third event"
-- "Show me all of Priya’s calendar items"
+- "Show me all calendar items for Priya"
+- "Find a time when all backend developers are available"
 
-Provide friendly, readable summaries of events in plain English. Do not expose raw keys like `event_id` unless necessary.
-
+When using `get_whole_calendar`, filter results by the member(s) relevant to the user query. Provide readable summaries in plain English. Do not expose raw keys like `event_id` unless necessary.
 """,
     tools=[
-        get_events, add_event, delete_event_by_index, get_whole_calendar
+        add_event, delete_event_by_index, get_whole_calendar
     ]
 )

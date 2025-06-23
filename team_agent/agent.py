@@ -30,6 +30,7 @@ Examples of valid requests:
 
 Use concise, human-like language in responses, and provide just enough detail for the user’s question. You may return bullet points or a short profile summary. Avoid repeating field names unless necessary.
 
+
 Only call tools if the data is not already available in context. Ensure input structure matches expected schema when adding/updating team members.
 """,
     tools=[

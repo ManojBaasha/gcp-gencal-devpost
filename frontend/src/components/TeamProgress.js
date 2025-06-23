@@ -11,7 +11,8 @@ import {
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import db from '../firebase-config';
 
-const defaultAvatar = 'https://i.pravatar.cc/150?img=8';
+const getAvatarUrl = (name) =>
+  `https://api.dicebear.com/7.x/pixel-art/svg?seed=${encodeURIComponent(name)}&size=64`;
 
 const MemberCard = ({ member }) => (
   <motion.div
@@ -19,11 +20,12 @@ const MemberCard = ({ member }) => (
     className="card"
   >
     <div className="flex items-start space-x-4">
-      <img
-        src={member.avatar || defaultAvatar}
-        alt={member.name}
-        className="w-12 h-12 rounded-full"
-      />
+    <img
+  src={getAvatarUrl(member.name)}
+  alt={member.name}
+  className="w-12 h-12 rounded-full"
+/>
+
       <div className="flex-1">
         <div className="flex justify-between items-start">
           <div>

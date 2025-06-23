@@ -20,11 +20,13 @@ import { doc, getDoc } from 'firebase/firestore';
 import db from '../firebase-config';
 
 const iconMap = {
-  completed: <Flag className="text-green-500" />, // fallback
-  'Project Kickoff': <Flag className="text-green-500" />,
-  'Alpha Release': <Star className="text-green-500" />,
-  'Beta Testing': <Engineering className="text-blue-500" />,
-  'Version 1.0': <NewReleases className="text-gray-500" />
+  kickoff: <Flag className="text-green-500" />,
+  alpha: <Star className="text-yellow-500" />,
+  beta: <Engineering className="text-blue-500" />,
+  release: <NewReleases className="text-gray-500" />,
+  blocked: <BugReport className="text-red-500" />,
+  inprogress: <Engineering className="text-blue-500" />,
+  completed: <CheckCircle className="text-green-500" />
 };
 
 const FeatureCard = ({ icon, title, description }) => (
@@ -68,28 +70,47 @@ const About = () => {
     );
   }
 
-  // Milestones: use timeline string and status from project.status
   const timeline = project.timeline || '';
   const status = project.status || {};
-  // For demo, create milestones from timeline and status
+
   const milestones = [
     {
-      date: timeline.split('(')[0]?.trim() || '',
-      title: status.sprint ? `Current Sprint: ${status.sprint}` : 'Sprint',
-      description: status.next_milestone || '',
-      status: 'in-progress',
-      icon: <Engineering className="text-blue-500" />
+      title: 'Project Kickoff',
+      date: 'Week 1',
+      description: 'Initial sync and scope alignment across teams.',
+      status: 'completed',
+      icon: iconMap.kickoff
     },
     {
-      date: '',
-      title: 'Blockers',
-      description: status.blockers || '',
+      title: `Sprint Status: ${status.sprint}`,
+      date: 'Week 2',
+      description: `Current milestone: ${status.next_milestone || 'N/A'}`,
+      status: 'inprogress',
+      icon: iconMap.inprogress
+    },
+    {
+      title: 'Current Blockers',
+      date: 'Ongoing',
+      description: status.blockers || 'No blockers at the moment.',
       status: 'blocked',
-      icon: <BugReport className="text-red-500" />
+      icon: iconMap.blocked
+    },
+    {
+      title: 'Alpha Release Prep',
+      date: 'Week 3',
+      description: 'Integrate all core AI behavior and demo to stakeholders.',
+      status: 'pending',
+      icon: iconMap.alpha
+    },
+    {
+      title: 'Version 1.0 Launch',
+      date: 'Week 4',
+      description: 'Final release after testing and bug fixes.',
+      status: 'pending',
+      icon: iconMap.release
     }
   ];
 
-  // Features: use project.goals as features
   const features = (project.goals || []).map((goal, i) => ({
     icon: <CheckCircle className="text-purple-500" />,
     title: `Goal ${i + 1}`,
@@ -130,12 +151,13 @@ const About = () => {
             {milestones.map((milestone, index) => (
               <TimelineItem key={index}>
                 <TimelineSeparator>
-                  <TimelineDot 
+                  <TimelineDot
                     sx={{
-                      bgcolor: milestone.status === 'completed' ? '#22c55e' :
-                             milestone.status === 'in-progress' ? '#3b82f6' :
-                             milestone.status === 'blocked' ? '#ef4444' :
-                             '#d1d5db'
+                      bgcolor:
+                        milestone.status === 'completed' ? '#22c55e' :
+                          milestone.status === 'inprogress' ? '#3b82f6' :
+                            milestone.status === 'blocked' ? '#ef4444' :
+                              '#d1d5db'
                     }}
                   >
                     {milestone.icon}
@@ -155,28 +177,73 @@ const About = () => {
         </motion.div>
 
         <motion.div
-          className="mt-12 p-6 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg text-white"
+          className="mt-12 p-6 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg text-white"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
         >
-          <h2 className="text-2xl font-bold mb-4">Get Involved</h2>
-          <p className="mb-6">
-            We're always looking for feedback and contributions to make our platform better.
-            Join our community and help shape the future of project management.
+          <h2 className="text-2xl font-bold mb-2">👋 Hey, I'm Manoj</h2>
+          <p className="mb-4 text-white text-opacity-90">
+            I love building apps and websites that solve real problems. Whether it's crafting
+            tools for startups or experimenting with new tech, I'm always down to collaborate,
+            share ideas, or just geek out about code.
           </p>
-          <div className="flex space-x-4">
-            <button className="px-6 py-2 bg-white text-blue-500 rounded-lg font-semibold hover:bg-blue-50 transition-colors">
-              Join Community
-            </button>
-            <button className="px-6 py-2 border-2 border-white rounded-lg font-semibold hover:bg-white hover:text-blue-500 transition-colors">
-              Learn More
-            </button>
+          <p className="mb-6 text-white text-opacity-90">
+            If you're working on something cool or want to jam on ideas, feel free to reach out —
+            always looking for exciting new opportunities!
+          </p>
+
+          <div className="flex items-center space-x-4">
+            <a
+              href="https://www.linkedin.com/in/manojelango/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:opacity-90 transition"
+            >
+              <img
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg"
+                alt="LinkedIn"
+                className="w-8 h-8"
+              />
+            </a>
+            <a
+              href="https://github.com/ManojBaasha"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:opacity-90 transition"
+            >
+              <img
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg"
+                alt="GitHub"
+                className="w-8 h-8"
+              />
+            </a>
+            <a
+              href="https://therealmanoj.tech"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:opacity-90 transition"
+            >
+              <svg
+                className="w-8 h-8 text-white"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 11c0-2.21 1.343-4 3-4s3 1.79 3 4-1.343 4-3 4-3-1.79-3-4zm-2 0c0 2.21-1.343 4-3 4s-3-1.79-3-4 1.343-4 3-4 3 1.79 3 4zm7.5 4H20m-4 0H8m-4 0h.5"
+                />
+              </svg>
+            </a>
           </div>
         </motion.div>
+
       </motion.div>
     </div>
   );
 };
 
-export default About; 
+export default About;

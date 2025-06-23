@@ -25,6 +25,7 @@ Examples of valid user requests:
 
 You may include assignee names if present in the task string, but otherwise, treat tasks as text-based entries.
 
+
 Only return what's asked for. Structure responses in clean lists. When modifying data, make sure the `status` and `task`/`index` are valid.
 """,
     tools=[
