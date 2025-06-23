@@ -143,9 +143,9 @@ npm run dev
 
 ## 🌐 Live Demo & Video
 
-🌍 Hosted Site: [https://product-manager-devpost.web.app](https://product-manager-devpost.web.app)
-📺 Demo Video: [Coming Soon](#)
-📝 Blog Post: [Coming Soon](#)
+🌍 Hosted Site: [https://product-manager-devpost.web.app](https://product-manager-devpost.web.app) <br>
+📺 Demo Video: [Coming Soon](#) <br>
+📝 Blog Post: [Coming Soon](#) <br>
 
 ---
 
@@ -165,4 +165,4 @@ Hey! I'm **Manoj**, a builder passionate about creating applications that simpli
 
 ---
 
-> This submission was created specifically for the [Agent Development Kit Hackathon with Google Cloud](https://adk.devpost.com).
+> This submission was created specifically for the [Agent Development Kit Hackathon with Google Cloud]([https://adk.devpost.com](https://googlecloudmultiagents.devpost.com/)).
